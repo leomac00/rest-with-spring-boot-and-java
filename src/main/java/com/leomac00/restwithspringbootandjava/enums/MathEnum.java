@@ -34,7 +34,7 @@ public enum MathEnum {
         public Double calc(String a, String b) { return Math.sqrt(convertToDouble(a)); }
     };
 
-    public abstract <T extends Number, U extends List<T>, R> R calc (String a, String b);
+    public abstract Number calc (String a, String b);
 
 
     private static Double convertToDouble(String strNumber) {
