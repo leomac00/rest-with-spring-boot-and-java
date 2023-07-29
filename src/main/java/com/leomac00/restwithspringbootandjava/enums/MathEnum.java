@@ -2,6 +2,7 @@ package com.leomac00.restwithspringbootandjava.enums;
 
 import java.lang.Math;
 import java.util.ArrayList;
+import java.util.List;
 
 public enum MathEnum {
     SUM{
@@ -13,33 +14,28 @@ public enum MathEnum {
     SUBTRACTION{
         @Override
         public Double calc(String a, String b) {
-            return convertToDouble(a) + convertToDouble(b);
+            return convertToDouble(a) - convertToDouble(b);
         }
     },
     MULTIPLICATION{
         @Override
         public Double calc(String a, String b) {
-            return convertToDouble(a) + convertToDouble(b);
+            return convertToDouble(a) * convertToDouble(b);
         }
     },
     DIVISION{
         @Override
         public Double calc(String a, String b) {
-            return convertToDouble(a) + convertToDouble(b);
+            return convertToDouble(a) / convertToDouble(b);
         }
     },
     SQRT{
         @Override
-        public Object calc(String a, String b) {
-            ArrayList results = new ArrayList<>();
-            results.add(Math.sqrt(convertToDouble(a)));
-            results.add(Math.sqrt(convertToDouble(b)));
-
-            return results;
-        }
+        public Double calc(String a, String b) { return Math.sqrt(convertToDouble(a)); }
     };
 
-    public abstract Object calc (String a, String b);
+    public abstract <T extends Number, U extends List<T>, R> R calc (String a, String b);
+
 
     private static Double convertToDouble(String strNumber) {
         if (strNumber == null) return 0d;
@@ -56,3 +52,4 @@ public enum MathEnum {
         return number.matches("[-+]?[0-9]*\\.?[0-9]+");
     }
 }
+
