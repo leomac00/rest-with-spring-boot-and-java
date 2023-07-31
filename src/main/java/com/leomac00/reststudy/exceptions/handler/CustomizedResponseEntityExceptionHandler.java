@@ -1,9 +1,9 @@
-package com.leomac00.restwithspringbootandjava.exceptions.handler;
+package com.leomac00.reststudy.exceptions.handler;
 
 import java.util.Date;
 
-import com.leomac00.restwithspringbootandjava.exceptions.ExceptionResponse;
-import com.leomac00.restwithspringbootandjava.exceptions.UnsupportedMathOperationException;
+import com.leomac00.reststudy.exceptions.ExceptionResponse;
+import com.leomac00.reststudy.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -30,8 +30,8 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 		return new ResponseEntity<>(exceptionResponse, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 	
-	@ExceptionHandler(UnsupportedMathOperationException.class)
-	public final ResponseEntity<ExceptionResponse> handleBadRequestExceptions(
+	@ExceptionHandler(ResourceNotFoundException.class)
+	public final ResponseEntity<ExceptionResponse> handleNotFoundExceptions(
 			Exception ex, WebRequest request) {
 		
 		ExceptionResponse exceptionResponse = new ExceptionResponse(
@@ -39,7 +39,7 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
 				ex.getMessage(),
 				request.getDescription(false));
 		
-		return new ResponseEntity<>(exceptionResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
 	}
 
 }

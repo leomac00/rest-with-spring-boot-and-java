@@ -1,7 +1,7 @@
 # Read Me First
 The following was discovered as part of building this project:
 
-* The original package name 'com.leomac00.rest-with-spring-boot-and-java' is invalid and this project uses 'com.leomac00.restwithspringbootandjava' instead.
+* The original package name 'com.leomac00.rest-with-spring-boot-and-java' is invalid and this project uses 'com.leomac00.reststudy' instead.
 
 # Getting Started
 

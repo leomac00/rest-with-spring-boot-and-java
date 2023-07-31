@@ -1,4 +1,4 @@
-package com.leomac00.restwithspringbootandjava.exceptions;
+package com.leomac00.reststudy.exceptions;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -1,4 +1,4 @@
-package com.leomac00.restwithspringbootandjava;
+package com.leomac00.reststudy;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

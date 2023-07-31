@@ -1,4 +1,4 @@
-package com.leomac00.restwithspringbootandjava;
+package com.leomac00.reststudy;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
