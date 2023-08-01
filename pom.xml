@@ -14,6 +14,7 @@
     <name>rest-with-spring-boot-and-java</name>
     <properties>
         <java.version>20</java.version>
+        <modelmapper.version>3.0.0</modelmapper.version>
     </properties>
     <dependencies>
         <dependency>
@@ -46,6 +47,11 @@
             <artifactId>lombok</artifactId>
             <version>1.18.28</version>
             <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>${modelmapper.version}</version>
         </dependency>
     </dependencies>
 

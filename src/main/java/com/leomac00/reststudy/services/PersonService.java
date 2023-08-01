@@ -1,11 +1,14 @@
 package com.leomac00.reststudy.services;
 
+import com.leomac00.reststudy.data.vo.v1.PersonVO;
 import com.leomac00.reststudy.exceptions.ResourceNotFoundException;
 import com.leomac00.reststudy.models.Person;
 import com.leomac00.reststudy.repositories.PersonRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -13,28 +16,39 @@ import java.util.logging.Logger;
 public class PersonService {
     @Autowired
     PersonRepository personRepository;
+    @Autowired
+    ModelMapper mapper;
     private Logger logger = Logger.getLogger(PersonService.class.getName());
     private final String notFoundMessage = "No person was found for the provided ID!";
 
-    public Person findById(Long id) {
+    public PersonVO findById(Long id) {
         logger.info("Finding one person");
-
-        return getPersonOrElseThrow(id);
+        var person = getPersonOrElseThrow(id);
+        return mapper.map(person, PersonVO.class);
     }
 
-    public List<Person> findAll() {
+    public List<PersonVO> findAll() {
         logger.info("Finding all persons");
 
-        return personRepository.findAll();
+        List<Person> entities = personRepository.findAll();
+        List<PersonVO> vos = new ArrayList<>();
+
+        entities.forEach(entity -> {
+            vos.add(mapper.map(entity, PersonVO.class));
+        });
+        return vos;
     }
 
-    public Person create(Person person) {
+    public PersonVO create(PersonVO personVO) {
         logger.info("Creating person");
 
-        return personRepository.save(person);
+
+        var entity = mapper.map(personVO, Person.class);
+        var vo = mapper.map(personRepository.save(entity), PersonVO.class);
+        return vo;
     }
 
-    public Person update(Person newPersonData) {
+    public PersonVO update(PersonVO newPersonData) {
         logger.info("Updating person");
 
         var entity = getPersonOrElseThrow(newPersonData.getId());
@@ -44,7 +58,8 @@ public class PersonService {
         entity.setAddress(newPersonData.getAddress());
         entity.setGender(newPersonData.getGender());
 
-        return personRepository.save(entity);
+        var vo = mapper.map(personRepository.save(entity), PersonVO.class);
+        return vo;
     }
 
     public void delete(Long id) {

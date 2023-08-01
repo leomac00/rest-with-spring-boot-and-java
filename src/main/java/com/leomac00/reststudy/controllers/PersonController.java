@@ -1,8 +1,8 @@
 package com.leomac00.reststudy.controllers;
 
+import com.leomac00.reststudy.data.vo.v1.PersonVO;
 import com.leomac00.reststudy.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
-import com.leomac00.reststudy.models.Person;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.http.MediaType;
@@ -24,25 +24,25 @@ public class PersonController {
 
     @GetMapping(path = {"/{id}"},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person findById(@PathVariable(value = "id") Long id) {
+    public PersonVO findById(@PathVariable(value = "id") Long id) {
         return personService.findById(id);
     }
 
     @GetMapping(path = {"/findAll"},
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<Person> findAll() {
+    public List<PersonVO> findAll() {
         return personService.findAll();
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, // Consumes and Produces are optional but when using them it makes the swagger docs more complete
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person create(@RequestBody Person person) {
+    public PersonVO create(@RequestBody PersonVO person) {
         return personService.create(person);
     }
 
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public Person update(@RequestBody Person person) {
+    public PersonVO update(@RequestBody PersonVO person) {
         return personService.update(person);
     }
 
