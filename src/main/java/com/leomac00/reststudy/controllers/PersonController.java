@@ -40,6 +40,13 @@ public class PersonController {
         return personService.create(person);
     }
 
+    @PostMapping(path = "/v2",
+            consumes = MediaType.APPLICATION_JSON_VALUE, // Consumes and Produces are optional but when using them it makes the swagger docs more complete
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public PersonVO createv2(@RequestBody PersonVO person) {
+        return personService.createv2(person);
+    }
+
     @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public PersonVO update(@RequestBody PersonVO person) {

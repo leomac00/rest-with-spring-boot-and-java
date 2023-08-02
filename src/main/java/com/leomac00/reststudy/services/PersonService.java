@@ -41,8 +41,7 @@ public class PersonService {
 
     public PersonVO create(PersonVO personVO) {
         logger.info("Creating person");
-
-
+        
         var entity = mapper.map(personVO, Person.class);
         var vo = mapper.map(personRepository.save(entity), PersonVO.class);
         return vo;
@@ -71,5 +70,14 @@ public class PersonService {
     private Person getPersonOrElseThrow(Long id) {
         return personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(notFoundMessage));
+    }
+
+    public PersonVO createv2(PersonVO personVO) {
+        logger.info("Creating person");
+
+        var entity = mapper.map(personVO, Person.class);
+        entity.setAddress(entity.getAddress() + "v2");
+        var vo = mapper.map(personRepository.save(entity), PersonVO.class);
+        return vo;
     }
 }
