@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @RestController
-@RequestMapping("/person") // Creates a route to "localhost:8080/person"
+@RequestMapping("api/person/v1") // Creates a route to "localhost:8080/person"
 public class PersonController {
 
     @Autowired
