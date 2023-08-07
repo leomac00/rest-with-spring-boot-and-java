@@ -1,11 +1,11 @@
 package com.leomac00.reststudy.controllers;
 
+import com.leomac00.reststudy.Utils.MyMediaType;
 import com.leomac00.reststudy.data.vo.v1.PersonVO;
 import com.leomac00.reststudy.services.PersonService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.http.MediaType;
 
 import java.util.List;
 
@@ -23,25 +23,37 @@ public class PersonController {
     }
 
     @GetMapping(path = {"/{id}"},
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = {MyMediaType.APPLICATION_JSON,
+                    MyMediaType.APPLICATION_YAML,
+                    MyMediaType.APPLICATION_XML})
     public PersonVO findById(@PathVariable(value = "id") Long id) {
         return personService.findById(id);
     }
 
     @GetMapping(path = {"/findAll"},
-            produces = MediaType.APPLICATION_JSON_VALUE)
+            produces = {MyMediaType.APPLICATION_JSON,
+                    MyMediaType.APPLICATION_YAML,
+                    MyMediaType.APPLICATION_XML})
     public List<PersonVO> findAll() {
         return personService.findAll();
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, // Consumes and Produces are optional but when using them it makes the swagger docs more complete
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(consumes = {MyMediaType.APPLICATION_JSON,
+            MyMediaType.APPLICATION_YAML,
+            MyMediaType.APPLICATION_XML}, // Consumes and Produces are optional but when using them it makes the swagger docs more complete
+            produces = {MyMediaType.APPLICATION_JSON,
+                    MyMediaType.APPLICATION_YAML,
+                    MyMediaType.APPLICATION_XML})
     public PersonVO create(@RequestBody PersonVO person) {
         return personService.create(person);
     }
 
-    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
-            produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(consumes = {MyMediaType.APPLICATION_JSON,
+            MyMediaType.APPLICATION_YAML,
+            MyMediaType.APPLICATION_XML},
+            produces = {MyMediaType.APPLICATION_JSON,
+                    MyMediaType.APPLICATION_YAML,
+                    MyMediaType.APPLICATION_XML})
     public PersonVO update(@RequestBody PersonVO person) {
         return personService.update(person);
     }
