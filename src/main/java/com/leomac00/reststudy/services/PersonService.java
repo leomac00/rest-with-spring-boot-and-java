@@ -1,12 +1,17 @@
 package com.leomac00.reststudy.services;
 
-import com.leomac00.reststudy.data.vo.v1.PersonVO;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo; // This was the added import, static to make is easier to refer to
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn; // This was the added import, static to make is easier to refer to
+
+import com.leomac00.reststudy.controllers.PersonController;
 import com.leomac00.reststudy.exceptions.ResourceNotFoundException;
-import com.leomac00.reststudy.models.Person;
-import com.leomac00.reststudy.repositories.PersonRepository;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import com.leomac00.reststudy.repositories.PersonRepository;
+import com.leomac00.reststudy.data.vo.v1.PersonVO;
+import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Service;
+import com.leomac00.reststudy.models.Person;
+import org.modelmapper.ModelMapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -18,13 +23,26 @@ public class PersonService {
     PersonRepository personRepository;
     @Autowired
     ModelMapper mapper;
-    private Logger logger = Logger.getLogger(PersonService.class.getName());
+
+    public PersonService(ModelMapper mapper) {
+        this.mapper = mapper;
+        PersonServiceMappingConfig(mapper);
+    }
+
+    public static void PersonServiceMappingConfig(ModelMapper mapper) {
+        mapper.typeMap(Person.class, PersonVO.class).addMapping(Person::getId, PersonVO::setKey);
+        mapper.typeMap(PersonVO.class, Person.class).addMapping(PersonVO::getKey, Person::setId);
+    }
+
+    private final Logger logger = Logger.getLogger(PersonService.class.getName());
     private final String notFoundMessage = "No person was found for the provided ID!";
 
     public PersonVO findById(Long id) {
         logger.info("Finding one person");
         var person = getPersonOrElseThrow(id);
-        return mapper.map(person, PersonVO.class);
+        PersonVO vo = mapper.map(person, PersonVO.class);
+        vo.add(hateoasLink(id)); // Adds self rel to this returned VO
+        return vo;
     }
 
     public List<PersonVO> findAll() {
@@ -34,7 +52,9 @@ public class PersonService {
         List<PersonVO> vos = new ArrayList<>();
 
         entities.forEach(entity -> {
-            vos.add(mapper.map(entity, PersonVO.class));
+            var vo = mapper.map(entity, PersonVO.class);
+            vo.add(hateoasLink(entity.getId()));
+            vos.add(vo);
         });
         return vos;
     }
@@ -42,23 +62,26 @@ public class PersonService {
     public PersonVO create(PersonVO personVO) {
         logger.info("Creating person");
 
-
         var entity = mapper.map(personVO, Person.class);
         var vo = mapper.map(personRepository.save(entity), PersonVO.class);
+
+        vo.add(hateoasLink(vo.getKey()));
         return vo;
     }
 
     public PersonVO update(PersonVO newPersonData) {
         logger.info("Updating person");
 
-        var entity = getPersonOrElseThrow(newPersonData.getId());
+        var entity = getPersonOrElseThrow(newPersonData.getKey());
 
         entity.setFirstName(newPersonData.getFirstName());
         entity.setLastName(newPersonData.getLastName());
         entity.setAddress(newPersonData.getAddress());
         entity.setGender(newPersonData.getGender());
 
-        var vo = mapper.map(personRepository.save(entity), PersonVO.class);
+        var vo = mapper.map(entity, PersonVO.class);
+
+        vo.add(hateoasLink(personRepository.save(entity).getId()));
         return vo;
     }
 
@@ -71,5 +94,9 @@ public class PersonService {
     private Person getPersonOrElseThrow(Long id) {
         return personRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException(notFoundMessage));
+    }
+
+    private Link hateoasLink(Long id) {
+        return linkTo(methodOn(PersonController.class).findById(id)).withSelfRel();
     }
 }
