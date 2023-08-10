@@ -14,4 +14,7 @@ public enum MockPersonEnumValues {
         this.value = value;
     }
 
+    public String getMockValue(int id) {
+        return this.value + id;
+    }
 }

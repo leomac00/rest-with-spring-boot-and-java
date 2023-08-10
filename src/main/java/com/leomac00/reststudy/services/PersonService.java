@@ -4,7 +4,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo; /
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn; // This was the added import, static to make is easier to refer to
 
 import com.leomac00.reststudy.controllers.PersonController;
-import com.leomac00.reststudy.exceptions.ResourceNotFoundException;
+import com.leomac00.reststudy.exceptions.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.leomac00.reststudy.repositories.PersonRepository;
 import com.leomac00.reststudy.data.vo.v1.PersonVO;
@@ -60,6 +60,8 @@ public class PersonService {
     }
 
     public PersonVO create(PersonVO personVO) {
+        if (personVO == null)
+            throw new RequiredObjectIsNullException(); // Just make the code throw this exception if body is null, pretty simple
         logger.info("Creating person");
 
         var entity = mapper.map(personVO, Person.class);
@@ -70,6 +72,9 @@ public class PersonService {
     }
 
     public PersonVO update(PersonVO newPersonData) {
+        if (newPersonData == null)
+            throw new RequiredObjectIsNullException(); // Just make the code throw this exception if body is null, pretty simple
+
         logger.info("Updating person");
 
         var entity = getPersonOrElseThrow(newPersonData.getKey());
