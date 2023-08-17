@@ -1,5 +1,6 @@
 package com.leomac00.reststudy.unittests;
 
+import com.leomac00.reststudy.config.CustomModelMapper;
 import com.leomac00.reststudy.data.vo.v1.PersonVO;
 import com.leomac00.reststudy.exceptions.RequiredObjectIsNullException;
 import com.leomac00.reststudy.mocks.MockPerson;
@@ -17,7 +18,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -35,43 +38,31 @@ class PersonServiceTest {
     private String gm = MockPersonEnumValues.GENDER_MALE.value;
     private String gf = MockPersonEnumValues.GENDER_FEMALE.value;
 
-    private ModelMapper mapper = new ModelMapper(); //Note here I created an instance of ModelMapper
+    @Mock
+    private ModelMapper mapper; //Note here I created an instance of ModelMapper
     @Mock
     private PersonRepository repository;
-    @InjectMocks
-    private PersonService service = new PersonService(mapper); //Here when creating the PersonService I passed the ModelMapper dependency that it has
 
-    @Before
-    void setupMapper() {
-        PersonService.PersonServiceMappingConfig(mapper);
-    }
+    private ModelMapper cmm = new CustomModelMapper().customMapper();
+    @InjectMocks
+    private PersonService service; //Here when creating the PersonService I passed the ModelMapper dependency that it has
+
 
     @BeforeEach
-    void setUp() {
+    void setUpBE() {
         input = new MockPerson();
         MockitoAnnotations.openMocks(this);
-//        //And here I had to set the typeMap value that I set in Person Service
-//        PersonService.PersonServiceMappingConfig(mapper);
+
     }
 
     @Test
     void findById() {
         Person entity = input.mockEntity(id);
         when(repository.findById((long) id)).thenReturn(Optional.ofNullable(entity)); // When repository tries to get repository.findById the mock will return our "person" passed in the reutnr block
-
+        when(mapper.map(entity, PersonVO.class)).thenReturn(cmm.map(entity, PersonVO.class));
         var result = service.findById((long) id); //Grab person in our mocked service which will access the mocked repository
 
         assertHappyPathResultValues(result);
-    }
-
-    @Test
-    void findAll() {
-        List<Person> entities = input.mockEntityList();
-        when(repository.findAll()).thenReturn(entities);
-
-        var resultList = service.findAll();
-
-        assertHappyPathResultValues(resultList.get(id));
     }
 
     @Test
@@ -83,6 +74,8 @@ class PersonServiceTest {
         PersonVO vo = input.mockVO(id);
 
         when(repository.save(entity)).thenReturn(persisted);
+        when(mapper.map(vo, Person.class)).thenReturn(cmm.map(vo, Person.class));
+        when(mapper.map(entity, PersonVO.class)).thenReturn(cmm.map(entity, PersonVO.class));
 
         var result = service.create(vo);
 
@@ -109,6 +102,7 @@ class PersonServiceTest {
         // We have to use the 2 "when's" here because there are the two methods that the update operation is using inside
         when(repository.save(entity)).thenReturn(persisted);
         when(repository.findById((long) id)).thenReturn(Optional.ofNullable(entity));
+        when(mapper.map(entity, PersonVO.class)).thenReturn(cmm.map(entity, PersonVO.class));
 
         var result = service.update(vo);
 

@@ -23,17 +23,7 @@ public class PersonService {
     PersonRepository personRepository;
     @Autowired
     ModelMapper mapper;
-
-    public PersonService(ModelMapper mapper) {
-        this.mapper = mapper;
-        PersonServiceMappingConfig(mapper);
-    }
-
-    public static void PersonServiceMappingConfig(ModelMapper mapper) {
-        mapper.typeMap(Person.class, PersonVO.class).addMapping(Person::getId, PersonVO::setKey);
-        mapper.typeMap(PersonVO.class, Person.class).addMapping(PersonVO::getKey, Person::setId);
-    }
-
+    
     private final Logger logger = Logger.getLogger(PersonService.class.getName());
     private final String notFoundMessage = "No person was found for the provided ID!";
 

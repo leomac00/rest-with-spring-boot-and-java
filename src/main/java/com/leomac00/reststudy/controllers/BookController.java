@@ -1,41 +1,34 @@
 package com.leomac00.reststudy.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import com.leomac00.reststudy.Utils.MyMediaType;
+import com.leomac00.reststudy.data.vo.v1.BookVO;
+import com.leomac00.reststudy.models.Book;
+import com.leomac00.reststudy.services.BookService;
+import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
-import com.leomac00.reststudy.services.PersonService;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
-import com.leomac00.reststudy.data.vo.v1.PersonVO;
-import org.springframework.web.bind.annotation.*;
-import com.leomac00.reststudy.Utils.MyMediaType;
-import org.springframework.http.ResponseEntity;
-import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "People", description = "Endpoints for Managing People [@Tag]")
+@Tag(name = "Book", description = "Endpoints for managing books")
 @RestController
-@RequestMapping("api/person/v1") // Creates a route to "localhost:8080/person"
-public class PersonController {
+@RequestMapping("api/book/v1")
+public class BookController {
 
     @Autowired
-    private PersonService personService;
-
-    @GetMapping(path = {"/hi"})
-    public String hi() {
-        return "Hi";
-    }
+    BookService service;
 
     @GetMapping(path = {"/{id}"},
-            produces = {MyMediaType.APPLICATION_JSON,
-                    MyMediaType.APPLICATION_YAML,
-                    MyMediaType.APPLICATION_XML})
-    @Operation( // From here we define what this endpoint does and how it behaves, we insert the descriptions here using the following annotations
-            summary = "Finds one person based on provided id.[@Operation.summary]",
-            description = "Finds one person based on provided id.[@Operation.description]",
-            tags = {"People"},
+            produces = {MyMediaType.APPLICATION_JSON, MyMediaType.APPLICATION_XML, MyMediaType.APPLICATION_YAML})
+    @Operation(
+            summary = "Finds one book based on provided id.",
+            description = "Finds one book based on provided id.",
+            tags = {"Book"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -43,8 +36,7 @@ public class PersonController {
                             content = {
                                     @Content(
                                             mediaType = MyMediaType.APPLICATION_JSON,
-
-                                            array = @ArraySchema(schema = @Schema(implementation = PersonVO.class))
+                                            array = @ArraySchema(schema = @Schema(implementation = BookVO.class))
                                     )
                             }),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -53,18 +45,19 @@ public class PersonController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public PersonVO findById(@PathVariable(value = "id") Long id) {
-        return personService.findById(id);
+    public BookVO findById(@PathVariable(name = "id") Long id) {
+        return service.findById(id);
     }
+
 
     @GetMapping(path = {"/findAll"},
             produces = {MyMediaType.APPLICATION_JSON,
                     MyMediaType.APPLICATION_YAML,
                     MyMediaType.APPLICATION_XML})
-    @Operation( // From here we define what this endpoint does and how it behaves, we insert the descriptions here using the following annotations
-            summary = "Finds all People.[@Operation.summary]",
-            description = "Finds all People.[@Operation.description]",
-            tags = {"People"},
+    @Operation(
+            summary = "Finds all Books.",
+            description = "Finds all Books.",
+            tags = {"Book"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -73,7 +66,7 @@ public class PersonController {
                                     @Content(
                                             mediaType = MyMediaType.APPLICATION_JSON,
 
-                                            array = @ArraySchema(schema = @Schema(implementation = PersonVO.class))
+                                            array = @ArraySchema(schema = @Schema(implementation = BookVO.class))
                                     )
                             }),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -82,20 +75,20 @@ public class PersonController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public List<PersonVO> findAll() {
-        return personService.findAll();
+    public List<BookVO> findAll() {
+        return service.findAll();
     }
 
     @PostMapping(consumes = {MyMediaType.APPLICATION_JSON,
             MyMediaType.APPLICATION_YAML,
-            MyMediaType.APPLICATION_XML}, // Consumes and Produces are optional but when using them it makes the swagger docs more complete
+            MyMediaType.APPLICATION_XML},
             produces = {MyMediaType.APPLICATION_JSON,
                     MyMediaType.APPLICATION_YAML,
                     MyMediaType.APPLICATION_XML})
-    @Operation( // From here we define what this endpoint does and how it behaves, we insert the descriptions here using the following annotations
-            summary = "Creates a Person entry in the database based on it's body data.[@Operation.summary]",
-            description = "Creates a Person entry in the database based on it's body data.[@Operation.description]",
-            tags = {"People"},
+    @Operation(
+            summary = "Creates a Book entry in the database based on it's body data.",
+            description = "Creates a Book entry in the database based on it's body data.",
+            tags = {"Book"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -104,7 +97,7 @@ public class PersonController {
                                     @Content(
                                             mediaType = MyMediaType.APPLICATION_JSON,
 
-                                            array = @ArraySchema(schema = @Schema(implementation = PersonVO.class))
+                                            array = @ArraySchema(schema = @Schema(implementation = BookVO.class))
                                     )
                             }),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -113,8 +106,8 @@ public class PersonController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public PersonVO create(@RequestBody PersonVO person) {
-        return personService.create(person);
+    public BookVO create(@RequestBody BookVO bookVO) {
+        return service.create(bookVO);
     }
 
     @PutMapping(consumes = {MyMediaType.APPLICATION_JSON,
@@ -123,10 +116,10 @@ public class PersonController {
             produces = {MyMediaType.APPLICATION_JSON,
                     MyMediaType.APPLICATION_YAML,
                     MyMediaType.APPLICATION_XML})
-    @Operation( // From here we define what this endpoint does and how it behaves, we insert the descriptions here using the following annotations
-            summary = "Updates a Person entry in the database based on it's body data.[@Operation.summary]",
-            description = "Updates a Person entry in the database based on it's body data.[@Operation.description]",
-            tags = {"People"},
+    @Operation(
+            summary = "Updates a Book entry in the database based on it's body data.",
+            description = "Updates a Book entry in the database based on it's body data.",
+            tags = {"Book"},
             responses = {
                     @ApiResponse(
                             description = "Success",
@@ -135,7 +128,7 @@ public class PersonController {
                                     @Content(
                                             mediaType = MyMediaType.APPLICATION_JSON,
 
-                                            array = @ArraySchema(schema = @Schema(implementation = PersonVO.class))
+                                            array = @ArraySchema(schema = @Schema(implementation = BookVO.class))
                                     )
                             }),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -144,15 +137,15 @@ public class PersonController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public PersonVO update(@RequestBody PersonVO person) {
-        return personService.update(person);
+    public BookVO update(@RequestBody BookVO book) {
+        return service.update(book);
     }
 
     @DeleteMapping(path = {"/{id}"})
-    @Operation( // From here we define what this endpoint does and how it behaves, we insert the descriptions here using the following annotations
-            summary = "Deletes a Person entry in the database based on a provided ID.",
-            description = "Deletes a Person entry in the database based on a provided ID.",
-            tags = {"People"},
+    @Operation(
+            summary = "Deletes a Book entry in the database based on a provided ID.",
+            description = "Deletes a Book entry in the database based on a provided ID.",
+            tags = {"Book"},
             responses = {
                     @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
                     @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
@@ -161,9 +154,7 @@ public class PersonController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
-    public ResponseEntity<?> delete(@PathVariable(value = "id") Long id) { //Now it return the ResponseEntity.noContent for better docs when we start using swagger
-        personService.delete(id);
-
-        return ResponseEntity.noContent().build();
+    public void delete(@PathVariable(name = "id") Long id) {
+        service.delete(id);
     }
 }
