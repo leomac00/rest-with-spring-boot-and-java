@@ -38,9 +38,6 @@ public class AbstractIntegrationTests {
             MapPropertySource testcontainers = new MapPropertySource(
                     "testcontainers",
                     (Map) createConnectionConfiguration());
-            System.out.println(">>>>>>>>>>>>>>> " + createConnectionConfiguration().get("spring.datasource.url"));
-            System.out.println(">>>>>>>>>>>>>>> " + createConnectionConfiguration().get("spring.datasource.username"));
-            System.out.println(">>>>>>>>>>>>>>> " + createConnectionConfiguration().get("spring.datasource.password"));
             environment.getPropertySources().addFirst(testcontainers);
         }
     }

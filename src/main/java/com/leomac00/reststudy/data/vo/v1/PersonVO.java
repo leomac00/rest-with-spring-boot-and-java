@@ -22,6 +22,6 @@ public class PersonVO extends RepresentationModel<PersonVO> implements Serializa
     @JsonProperty("last_name")
     private String lastName;
     private String address;
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonProperty("gender")
     private String gender;
 }

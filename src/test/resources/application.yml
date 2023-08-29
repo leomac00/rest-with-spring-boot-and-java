@@ -1,3 +1,5 @@
+cors:
+  originPatterns: http://leomac00.com,http://localhost:8080,http://localhost:3000
 server:
   port: 8888
 spring:

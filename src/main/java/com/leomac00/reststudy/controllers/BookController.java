@@ -45,6 +45,8 @@ public class BookController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
+    @CrossOrigin(origins = {"http://leomac00.com", "http://localhost:8080"})
+    //This limits the requests for these 2 origins
     public BookVO findById(@PathVariable(name = "id") Long id) {
         return service.findById(id);
     }
@@ -106,6 +108,7 @@ public class BookController {
                     @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
             }
     )
+    @CrossOrigin(origins = {"http://localhost:8080"}) //This limits the request for this single origin
     public BookVO create(@RequestBody BookVO bookVO) {
         return service.create(bookVO);
     }
