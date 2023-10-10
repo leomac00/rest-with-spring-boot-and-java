@@ -3,6 +3,7 @@ package com.leomac00.reststudy.exceptions.handler;
 import java.util.Date;
 
 import com.leomac00.reststudy.exceptions.ExceptionResponse;
+import com.leomac00.reststudy.exceptions.InvalidJWTAuthenticationException;
 import com.leomac00.reststudy.exceptions.RequiredObjectIsNullException;
 import com.leomac00.reststudy.exceptions.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -42,7 +43,6 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
     }
 
-    // new added exception
     @ExceptionHandler(RequiredObjectIsNullException.class)
     public final ResponseEntity<ExceptionResponse> handleNullObjectExceptions(
             Exception ex, WebRequest request) {
@@ -52,5 +52,17 @@ public class CustomizedResponseEntityExceptionHandler extends ResponseEntityExce
                 request.getDescription(false));
 
         return new ResponseEntity<>(exceptionResponse, HttpStatus.NOT_FOUND);
+    }
+
+    // new added exception for JWT
+    @ExceptionHandler(InvalidJWTAuthenticationException.class)
+    public final ResponseEntity<ExceptionResponse> handleInvalidJWTAuthenticationException(
+            Exception ex, WebRequest request) {
+        ExceptionResponse exceptionResponse = new ExceptionResponse(
+                new Date(),
+                ex.getMessage(),
+                request.getDescription(false));
+
+        return new ResponseEntity<>(exceptionResponse, HttpStatus.FORBIDDEN);
     }
 }
