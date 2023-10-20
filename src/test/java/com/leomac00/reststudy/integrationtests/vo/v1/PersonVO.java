@@ -17,4 +17,6 @@ public class PersonVO implements Serializable {
     private String last_name;
     private String address;
     private String gender;
+    private Boolean enabled;
+
 }

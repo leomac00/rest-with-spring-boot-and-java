@@ -5,6 +5,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 import com.leomac00.reststudy.controllers.PersonController;
 import com.leomac00.reststudy.exceptions.*;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.leomac00.reststudy.repositories.PersonRepository;
 import com.leomac00.reststudy.data.vo.v1.PersonVO;
@@ -23,7 +24,7 @@ public class PersonService {
     PersonRepository personRepository;
     @Autowired
     ModelMapper mapper;
-    
+
     private final Logger logger = Logger.getLogger(PersonService.class.getName());
     private final String notFoundMessage = "No person was found for the provided ID!";
 
@@ -84,6 +85,36 @@ public class PersonService {
         logger.info("Deleting person");
         var entity = getPersonOrElseThrow(id);
         personRepository.delete(entity);
+    }
+
+    @Transactional
+    public PersonVO disable(Long id) {
+        logger.info("Disabling person with id '" + id);
+        if (id == null)
+            throw new RequiredObjectIsNullException();
+
+        personRepository.disable(id);
+
+        var entity = getPersonOrElseThrow(id);
+        var vo = mapper.map(entity, PersonVO.class);
+
+        vo.add(hateoasLink(id));
+        return vo;
+    }
+
+    @Transactional
+    public PersonVO enable(Long id) {
+        logger.info("Enabling person with id '" + id);
+        if (id == null)
+            throw new RequiredObjectIsNullException();
+
+        personRepository.enable(id);
+
+        var entity = getPersonOrElseThrow(id);
+        var vo = mapper.map(entity, PersonVO.class);
+
+        vo.add(hateoasLink(id));
+        return vo;
     }
 
     private Person getPersonOrElseThrow(Long id) {

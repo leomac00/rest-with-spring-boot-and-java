@@ -9,7 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 
 import java.io.Serializable;
 
-@JsonPropertyOrder({"id", "address", "first_name", "last_name"})
+@JsonPropertyOrder({"id", "address", "first_name", "last_name", "gender", "enabled"})
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -24,4 +24,5 @@ public class PersonVO extends RepresentationModel<PersonVO> implements Serializa
     private String address;
     @JsonProperty("gender")
     private String gender;
+    private Boolean enabled;
 }

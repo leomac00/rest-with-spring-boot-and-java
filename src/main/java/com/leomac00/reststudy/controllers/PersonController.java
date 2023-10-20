@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 
 import java.util.List;
 
+
 @Tag(name = "People", description = "Endpoints for Managing People [@Tag]")
 @RestController
 @RequestMapping("api/person/v1") // Creates a route to "localhost:8080/person"
@@ -165,5 +166,39 @@ public class PersonController {
         personService.delete(id);
 
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping(path = {"/disable/{id}"})
+    @Operation(
+            summary = "Disables person based on a provided ID.",
+            description = "Disables person based on a provided ID.",
+            tags = {"People"},
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
+    public PersonVO disable(@PathVariable(value = "id") Long id) {
+        return personService.disable(id);
+    }
+
+    @PatchMapping(path = {"/enable/{id}"})
+    @Operation(
+            summary = "Enables person based on a provided ID.",
+            description = "Enables person based on a provided ID.",
+            tags = {"People"},
+            responses = {
+                    @ApiResponse(description = "No Content", responseCode = "204", content = @Content),
+                    @ApiResponse(description = "Bad Request", responseCode = "400", content = @Content),
+                    @ApiResponse(description = "Unauthorized", responseCode = "401", content = @Content),
+                    @ApiResponse(description = "Not found", responseCode = "404", content = @Content),
+                    @ApiResponse(description = "Internal Error", responseCode = "500", content = @Content),
+            }
+    )
+    public PersonVO enable(@PathVariable(value = "id") Long id) {
+        return personService.enable(id);
     }
 }

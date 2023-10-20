@@ -89,6 +89,7 @@ class PersonControllerJsonTest extends AbstractIntegrationTests {
         assertEquals(person.getFirst_name(), createdPerson.getFirst_name());
         assertEquals(person.getLast_name(), createdPerson.getLast_name());
         assertEquals(person.getGender(), createdPerson.getGender());
+        assertEquals(person.getEnabled(), true);
     }
 
     @Test
@@ -137,13 +138,14 @@ class PersonControllerJsonTest extends AbstractIntegrationTests {
         assertEquals(person.getFirst_name(), foundPerson.getFirst_name());
         assertEquals(person.getLast_name(), foundPerson.getLast_name());
         assertEquals(person.getGender(), foundPerson.getGender());
+        assertEquals(person.getEnabled(), true);
     }
 
     @Test
     @Order(4)
     void testFindByIdWithInvalidOrigin() throws JsonProcessingException {
         mockPerson();
-        
+
         var content = given().spec(specification)
                 .header(TestConfigs.HEADER_PARAM_ORIGIN, TestConfigs.INVALID_ORIGIN)
                 .contentType(TestConfigs.CONTENT_TYPE_JSON)
@@ -160,11 +162,65 @@ class PersonControllerJsonTest extends AbstractIntegrationTests {
         assertEquals("Invalid CORS request", content);
     }
 
+    @Test
+    @Order(5)
+    void testDisable() throws JsonProcessingException {
+        mockPerson();
+
+        var content = given().spec(specification)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .pathParam("id", person.getId())
+                .when()
+                .patch("disable/{id}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
+
+        var responsePerson = objectMapper.readValue(content, PersonVO.class);
+
+        assertTrue(responsePerson.getId() > 0);
+        assertNotNull(responsePerson);
+        assertEquals(person.getAddress(), responsePerson.getAddress());
+        assertEquals(person.getFirst_name(), responsePerson.getFirst_name());
+        assertEquals(person.getLast_name(), responsePerson.getLast_name());
+        assertEquals(person.getGender(), responsePerson.getGender());
+        assertEquals(false, responsePerson.getEnabled());
+    }
+
+    @Test
+    @Order(5)
+    void testEnable() throws JsonProcessingException {
+        mockPerson();
+
+        var content = given().spec(specification)
+                .contentType(TestConfigs.CONTENT_TYPE_JSON)
+                .pathParam("id", person.getId())
+                .when()
+                .patch("enable/{id}")
+                .then()
+                .statusCode(200)
+                .extract()
+                .body()
+                .asString();
+
+        var responsePerson = objectMapper.readValue(content, PersonVO.class);
+
+        assertTrue(responsePerson.getId() > 0);
+        assertNotNull(responsePerson);
+        assertEquals(person.getAddress(), responsePerson.getAddress());
+        assertEquals(person.getFirst_name(), responsePerson.getFirst_name());
+        assertEquals(person.getLast_name(), responsePerson.getLast_name());
+        assertEquals(person.getGender(), responsePerson.getGender());
+        assertEquals(true, responsePerson.getEnabled());
+    }
 
     private void mockPerson() {
         person.setAddress(MockPersonEnumValues.ADDRESS.value);
         person.setGender(MockPersonEnumValues.GENDER_FEMALE.value);
         person.setFirst_name(MockPersonEnumValues.FIRST_NAME.value);
         person.setLast_name(MockPersonEnumValues.LAST_NAME.value);
+        person.setEnabled(true);
     }
 }
