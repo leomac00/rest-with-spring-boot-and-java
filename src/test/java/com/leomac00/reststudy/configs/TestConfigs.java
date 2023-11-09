@@ -10,4 +10,11 @@ public class TestConfigs {
     public static final String CONTENT_TYPE_YAML = "application/x-yaml";
     public static final String VALID_ORIGIN = "http://leomac00.com";
     public static final String INVALID_ORIGIN = "http://invalidOrigin.com";
+    public static final String DIRECTION = "direction";
+    public static final String ASCENDING = "asc";
+    public static final String DESCENDING = "desc";
+    public static final String PAGE_LIMIT = "limit";
+    public static final String PAGE_NUMBER = "page";
+    public static final String FIND_BY_PARTIAL_NAME = "partialFirstName";
+
 }

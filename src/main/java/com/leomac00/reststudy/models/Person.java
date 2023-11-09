@@ -23,7 +23,7 @@ public class Person implements Serializable {
     private String lastName;
     @Column(nullable = false, length = 100)
     private String address;
-    @Column(nullable = false, length = 12)
+    @Column(nullable = false, length = 50)
     private String gender;
     @Column(nullable = false)
     private Boolean enabled;
